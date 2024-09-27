@@ -54,6 +54,19 @@ func (ns NullTaskPriority) Value() (driver.Value, error) {
 	return string(ns.TaskPriority), nil
 }
 
+type Project struct {
+	ProjectID   int64
+	Title       string
+	Description sql.NullString
+	AuthorName  string
+	CreatedAt   sql.NullTime
+}
+
+type ProjectTask struct {
+	TaskID    int64
+	ProjectID int64
+}
+
 type Task struct {
 	TaskID      int64
 	Title       string
@@ -70,6 +83,7 @@ type TaskStatus struct {
 }
 
 type TaskStatusType struct {
-	TaskStatusID int64
-	Type         string
+	TaskStatusTypesID int64
+	OwnerProjectID    int64
+	Type              string
 }

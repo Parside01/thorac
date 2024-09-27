@@ -1,11 +1,25 @@
--- name: CreateTask :one
-INSERT INTO tasks (title, description, priority, author_name, created_at, deadline)
-VALUES ($1, $2, $3, $4, $5, $6)
+-- name: CreateProject :one
+INSERT INTO projects (title, description, author_name, created_at)
+VALUES ($1, $2, $3, $4)
 RETURNING *;
 
+-- name: CreateTask :one
+WITH new_task AS (
+    INSERT INTO tasks (title, description, priority, author_name, created_at, deadline)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *
+)
+INSERT INTO project_tasks (task_id, project_id)
+SELECT task_id, $7 FROM new_task
+RETURNING *;
+
+-- name: AddTaskToProject :exec
+INSERT INTO project_tasks (task_id, project_id)
+VALUES ($1, $2);
+
 -- name: CreateNewTaskStatus :one
-INSERT INTO task_status_types (type)
-VALUES ($1)
+INSERT INTO task_status_types (owner_project_id, type)
+VALUES ($1, $2)
 RETURNING *;
 
 -- name: SetTaskDeadline :exec
@@ -14,9 +28,17 @@ SET deadline = $2
 WHERE task_id = $1;
 
 -- name: SetTaskStatus :exec
-UPDATE task_statuses
-SET task_status_id = (SELECT task_status_id FROM task_status_types WHERE $2 = type)
-WHERE task_id = $1;
+UPDATE task_statuses ts
+SET task_status_id = (
+    SELECT tst.task_status_types_id
+    FROM task_status_types tst
+    WHERE tst.type = $2 AND tst.owner_project_id = (
+        SELECT pt.project_id
+        FROM project_tasks pt
+        WHERE pt.task_id = $1
+    )
+)
+WHERE ts.task_id = $1;
 
 -- name: GetAllTasks :many
 SELECT *
@@ -45,7 +67,7 @@ WHERE task_id = $1;
 -- name: GetTaskStatusByTaskId :one
 SELECT t.type
 FROM task_statuses AS ts
-         JOIN task_status_types AS t ON ts.task_status_id = t.task_status_id
+         JOIN task_status_types AS t ON ts.task_status_id = t.task_status_types_id
 WHERE ts.task_id = $1;
 
 -- name: GetAllTaskStatuses :many
@@ -56,7 +78,7 @@ FROM task_status_types;
 SELECT t.*
 FROM tasks AS t
          JOIN task_statuses AS ts ON t.task_id = ts.task_id
-         JOIN task_status_types AS tst ON ts.task_status_id = tst.task_status_id
+         JOIN task_status_types AS tst ON ts.task_status_id = tst.task_status_types_id
 WHERE tst.type = $1;
 
 -- name: GetTasksByPriority :many
@@ -70,3 +92,9 @@ WHERE author_name = $1;
 -- name: GetTasksByDeadline :many
 SELECT * FROM tasks
 WHERE deadline <= $1;
+
+-- name: GetTasksByProject :many
+SELECT t.*
+FROM tasks AS t
+         JOIN project_tasks AS pt ON t.task_id = pt.task_id
+WHERE pt.project_id = $1;
