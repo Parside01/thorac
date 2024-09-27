@@ -2,7 +2,9 @@ package server
 
 import (
 	"github.com/jiyeyuran/go-config"
+	"github.com/labstack/echo/v4"
 	"go.uber.org/zap"
+	"net/http"
 )
 
 type TaskControllerConfig struct {
@@ -30,5 +32,15 @@ func (c *TaskController) GetGroup() string {
 }
 
 func (c *TaskController) GetHandlers() []ControllerHandler {
-	return []ControllerHandler{}
+	return []ControllerHandler{
+		&Handler{
+			Method:  http.MethodPost,
+			Path:    "/create_project",
+			Handler: c.createProject,
+		},
+	}
+}
+
+func (c *TaskController) createProject(e echo.Context) error {
+
 }

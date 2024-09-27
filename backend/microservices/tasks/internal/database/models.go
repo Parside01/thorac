@@ -87,3 +87,13 @@ type TaskStatusType struct {
 	OwnerProjectID    int64
 	Type              string
 }
+
+type UsersProject struct {
+	UserID    int64
+	ProjectID int64
+}
+
+type UsersTask struct {
+	UserID int64
+	TaskID int64
+}
