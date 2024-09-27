@@ -11,26 +11,19 @@ type ServerConfig struct {
 }
 
 type Server struct {
-	logger      *zap.Logger
+	Logger      *zap.Logger
 	router      *echo.Echo
 	controllers []Controller
 	Config      *ServerConfig
 }
 
-func NewServer(path string) *Server {
+func NewServer() *Server {
 	serve := &Server{}
-	serve.logger, _ = zap.NewDevelopment()
-	if err := config.LoadFile(path); err != nil {
-		serve.logger.Fatal("Error read config", zap.Error(err))
-		return nil
-	}
-	if err := config.LoadFile(path); err != nil {
-		serve.logger.Fatal("Error read config", zap.Error(err))
-	}
+	serve.Logger, _ = zap.NewDevelopment()
 
 	conf := &ServerConfig{}
 	if err := config.Get("server").Scan(&conf); err != nil {
-		serve.logger.Fatal("Error read config", zap.Error(err))
+		serve.Logger.Fatal("Error read config", zap.Error(err))
 	}
 
 	serve.router = echo.New()
@@ -39,7 +32,7 @@ func NewServer(path string) *Server {
 }
 
 func (server *Server) Start() error {
-	server.logger.Info("Starting server", zap.String("address", server.Config.Address))
+	server.Logger.Info("Starting server", zap.String("address", server.Config.Address))
 	return server.router.Start(server.Config.Address)
 }
 

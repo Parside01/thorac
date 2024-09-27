@@ -1,0 +1,8 @@
+{
+  "server": {
+    "address": "localhost:8080"
+  },
+  "task_controller": {
+    "route_group": "/api/projects/tasks"
+  }
+}

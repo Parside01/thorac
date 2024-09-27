@@ -5,7 +5,6 @@ import "github.com/labstack/echo/v4"
 type Controller interface {
 	GetGroup() string
 	GetHandlers() []ControllerHandler
-	GetMiddleware() []echo.MiddlewareFunc
 }
 
 type ControllerHandler interface {
