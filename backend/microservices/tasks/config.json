@@ -1,6 +1,7 @@
 {
   "server": {
-    "address": "localhost:8080"
+    "address": "localhost:8080",
+    "database_addr": "postgresql://myuser:mypassword@localhost:5432/mydatabase"
   },
   "task_controller": {
     "route_group": "/api/projects/tasks"

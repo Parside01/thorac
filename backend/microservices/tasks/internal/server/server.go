@@ -36,6 +36,8 @@ func (server *Server) Start() error {
 	return server.router.Start(server.Config.Address)
 }
 
+func (s *)
+
 func (s *Server) RegisterRouters(routes []Controller) {
 	for _, route := range routes {
 		group := s.router.Group(route.GetGroup())
