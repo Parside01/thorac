@@ -4,7 +4,7 @@ package tasks;
 
 option go_package = "services.tasks;tasks";
 
-// generate command: protoc --proto_path=proto/proto --go-grpc_out=proto/gen/go/ proto/proto/tasks.proto
+// generate command: protoc --proto_path=proto/proto --go-grpc_out=proto/gen/go/ proto/proto/*.proto
 
 message CreateProjectRequest {
     string user_id = 1;
