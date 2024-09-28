@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package mail;
+
+option go_package = "/mail;mail";
+
+message AccessCode {
+    string id = 1;
+    string createdAt = 2;
+    string expiresIn = 3;
+    int32 code = 4;
+    string user_id = 5;
+}
+
+message SendAccessCodeDTO {
+    string email = 1;
+    string user_id = 2;
+}
+
+message ConfirmAccessCodeDTO {
+    string user_id = 1;
+    int32 code = 2;
+}
+
+message IsConfirmedAccessCode {
+    bool isConfirmed = 1;
+}
+
+service MailService {
+    rpc SendAccessCode (SendAccessCodeDTO) returns (AccessCode);
+    rpc ConfirmAccessCode (ConfirmAccessCodeDTO) returns (IsConfirmedAccessCode);
+}
