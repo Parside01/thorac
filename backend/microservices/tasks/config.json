@@ -1,7 +1,7 @@
 {
   "server": {
     "address": "localhost:8080",
-    "database_addr": "jdbc:postgresql://localhost:5432/postgres"
+    "database_addr": "host=localhost user=postgres password=postgres dbname=postgres port=5432 sslmode=disable"
   },
   "task_controller": {
     "route_group": "/api/projects/tasks"
