@@ -14,12 +14,15 @@ export const Home = () => {
     return (
         <div className="Home-container">
             <header>
-                <div className="logo">thorac</div>
-                <div className="user-bar">
-                    <Avatar url="https://i.pinimg.com/originals/9c/2f/56/9c2f562b06908365b4d19d22a50e8f45.jpg" size={40} />
-                    <div className="info">
-                        <div className="fullName">Ilya Famin</div>
-                        <div className="userId">@Kneepy</div>
+                <div className="wrapper">
+                    <div className="logo">thorac</div>
+                    <div className="user-bar">
+                        <Avatar url="https://i.pinimg.com/originals/9c/2f/56/9c2f562b06908365b4d19d22a50e8f45.jpg"
+                                size={40} />
+                        <div className="info">
+                            <div className="fullName">Ilya Famin</div>
+                            <div className="userId">@Kneepy</div>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -52,8 +55,8 @@ export const Home = () => {
                 </div>
                 <div className="separator"></div>
                 <div className="tasks">
-                    <CardTask name="Вадим Дебил Тупой" description="Я не шучу" state="В процессе признания"
-                              createdAt="сейчас понял" />
+                    <CardTask name="Test Task Title" description="test task desckription" state="Выполняется"
+                              createdAt="2 часа назад" />
                 </div>
             </div>
         </div>

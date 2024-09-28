@@ -11,6 +11,9 @@
         font-size: 20px;
         font-weight: bold;
         border-bottom: 1px solid $separator_panel;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .users {
         display: flex;

@@ -5,83 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="161605bc-292d-4d58-93d8-d515704873c3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/.eslintrc.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/.prettierrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/desktop.ini" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/docker-compose.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/nest-cli.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/proto/store.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/app.middleware.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/constants/errors.constants.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/constants/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/constants/store.constants.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/decorators/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/decorators/save-file.decorator.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/dtos/get-file.dto.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/dtos/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/dtos/remove-file.dto.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/entities/file.entity.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/entities/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/interceptors/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/interceptors/write-file.interceptor.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/main.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/multer.config.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/providers/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/providers/store.resource.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/store.controller.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/store.module.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/types/create-file.dao.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/types/file.type.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/types/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/types/request.type.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/types/response.type.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/src/user-exist.guard.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/tsconfig.build.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/store/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/.idea/proto.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/gen/go/mail/mail.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/gen/go/mail/mail_grpc.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/gen/go/session/session.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/gen/go/session/session_grpc.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/gen/go/store/store.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/gen/go/store/store_grpc.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/gen/go/tasks/tasks.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/gen/go/user/user.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/gen/go/user/user_grpc.pb.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/proto/session.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/proto/store.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/microservices/tasks/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/microservices/tasks/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/microservices/tasks/generate.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/generate.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/microservices/tasks/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/microservices/tasks/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/microservices/tasks/internal/database/erd/queries.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/database/erd/queries.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/microservices/tasks/internal/database/erd/sql-scheme.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/database/erd/sql-scheme.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/microservices/tasks/internal/database/models.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/database/models.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/microservices/tasks/internal/database/queries.sql.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/database/queries.sql.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/microservices/tasks/internal/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/server/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/microservices/tasks/internal/server/task_controller.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/microservices/tasks/internal/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/service/service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/proto/gen/go/go.mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/proto/gen/go/go.sum" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/proto/gen/go/services.tasks/tasks_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/gen/go/tasks/tasks_grpc.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/proto/proto/mail.proto" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/proto/mail.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/proto/proto/session.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/proto/proto/tasks.proto" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/proto/tasks.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/proto/proto/user.proto" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/microservices/tasks/internal/proto/proto/user.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/frontend.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/generic/Modal/Modal.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/generic/Modal/Modal.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/home/Home.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/Home.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/home/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/Home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/home/TeamModal/TeamModal.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/TeamModal/TeamModal.scss" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,6 +37,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "develop",
     "last_opened_file_path": "C:/Drafts/thorac/frontend/node_modules/sass",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -145,6 +74,7 @@
       <updated>1727495297723</updated>
       <workItem from="1727495298533" duration="498000" />
       <workItem from="1727505986254" duration="19522000" />
+      <workItem from="1727530967759" duration="535000" />
     </task>
     <servers />
   </component>
