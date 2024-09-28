@@ -1,0 +1,41 @@
+@import "../../../styles/variables";
+
+.TeamModal {
+    width: 500px;
+    height: 500px;
+    background-color: $background_panel;
+    border-radius: 20px;
+    padding: 10px 20px;
+    .title {
+        padding: 10px 0;
+        font-size: 20px;
+        font-weight: bold;
+        border-bottom: 1px solid $separator_panel;
+    }
+    .users {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 20px 10px;
+        .user {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 10px;
+            padding: 10px;
+            &:hover {
+                background-color: $hover_panel;
+            }
+            .userName {
+                margin-top: 10px;
+                font-size: 14px;
+                font-weight: 500;
+                color: $black;
+                text-align: center;
+                text-wrap: wrap;
+                max-width: 100px;
+            }
+        }
+    }
+}
