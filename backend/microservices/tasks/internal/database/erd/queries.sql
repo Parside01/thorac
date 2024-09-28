@@ -1,47 +1,73 @@
--- name: CreateProject :one
+-- name: NewProject :one
 INSERT INTO projects (title, description, user_id, created_at)
 VALUES ($1, $2, $3, NOW())
 RETURNING *;
+
+-- name: NewTask :one
+INSERT INTO tasks (title, description, priority, user_id, created_at)
+VALUES ($1, $2, $3, $4, NOW())
+RETURNING *;
+
+-- name: IsUserInProject :one
+SELECT EXISTS (
+    SELECT 1
+    FROM users_projects
+    WHERE project_id = $1 AND user_id = $2
+);
+
+-- name: DeleteProjectFromUsersProjects :exec
+DELETE FROM users_projects
+WHERE project_id = $1;
+
+-- name: DeleteProjectsTask :exec
+DELETE FROM project_tasks
+WHERE project_id = $1;
+
+-- name: DeleteProject :exec
+DELETE FROM projects
+WHERE project_id = $1;
+
 
 -- name: AddUserToProject :one
 INSERT INTO users_projects (user_id, project_id)
 VALUES ($1, $2)
 RETURNING *;
 
--- name: CreateTask :one
-WITH new_task AS (
-    INSERT INTO tasks (title, description, priority, user_id, created_at, deadline)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING *),
-new_project_task AS (
-    INSERT INTO project_tasks (task_id, project_id)
-    SELECT task_id, $7 FROM new_task
-    RETURNING *
-)
-INSERT
-INTO users_tasks (user_id, task_id)
-SELECT $8, task_id
-FROM new_task
-RETURNING *;
 
 -- name: AddTaskToProject :exec
-WITH new_project_task AS (
-    INSERT INTO project_tasks (task_id, project_id)
-        VALUES ($1, $2)
-        RETURNING *
-)
-INSERT INTO users_tasks (user_id, task_id)
-SELECT $3, task_id FROM new_project_task;
+INSERT INTO project_tasks (task_id, project_id)
+VALUES ($1, $2);
+
+-- name: UpdateProject :one
+UPDATE projects
+SET title = $1, description = $2
+FROM users_projects
+WHERE projects.project_id = users_projects.project_id AND users_projects.user_id = $3
+RETURNING *;
+
+-- name: UserHasThisTask :one
+SELECT COUNT(*) > 0 FROM users_tasks
+WHERE user_id = $1 AND task_id = $2;
+
+-- name: AddUserToTask :exec
+INSERT INTO users_tasks (task_id, user_id)
+VALUES ($1, $2)
+ON CONFLICT (task_id, user_id) DO NOTHING;
+
+
+-- name: UpdateTask :one
+UPDATE tasks
+SET title       = $2,
+    description = $3,
+    priority    = $4,
+    user_id     = $5
+WHERE task_id = $1
+RETURNING *;
 
 -- name: CreateNewTaskStatus :one
 INSERT INTO task_status_types (owner_project_id, type)
 VALUES ($1, $2)
 RETURNING *;
-
--- name: SetTaskDeadline :exec
-UPDATE tasks
-SET deadline = $2
-WHERE task_id = $1;
 
 -- name: SetTaskStatus :exec
 UPDATE task_statuses ts
@@ -57,6 +83,14 @@ WHERE ts.task_id = $1;
 SELECT *
 FROM tasks;
 
+-- name: GetUserTasks :many
+SELECT * FROM users_tasks
+WHERE user_id = $1;
+
+-- name: GetUserProjects :many
+SELECT * FROM users_projects
+WHERE user_id = $1;
+
 -- name: GetTaskById :one
 SELECT *
 FROM tasks
@@ -67,15 +101,10 @@ DELETE
 FROM tasks
 WHERE task_id = $1;
 
--- name: UpdateTask :exec
-UPDATE tasks
-SET title       = $2,
-    description = $3,
-    priority    = $4,
-    user_id = $5,
-    created_at  = $6,
-    deadline    = $7
-WHERE task_id = $1;
+
+-- name: GetProjectByID :one
+SELECT * FROM projects
+WHERE project_id = $1 LIMIT 1;
 
 -- name: GetTaskStatusByTaskId :one
 SELECT t.type

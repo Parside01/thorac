@@ -71,7 +71,7 @@ type Task struct {
 	TaskID      string
 	Title       string
 	Description sql.NullString
-	Priority    TaskPriority
+	Priority    string
 	UserID      string
 	CreatedAt   sql.NullTime
 	Deadline    sql.NullTime

@@ -19,20 +19,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Tasks_CreateProject_FullMethodName       = "/tasks.Tasks/CreateProject"
-	Tasks_CreateTask_FullMethodName          = "/tasks.Tasks/CreateTask"
-	Tasks_CreateNewTaskStatus_FullMethodName = "/tasks.Tasks/CreateNewTaskStatus"
-	Tasks_AddTaskToProject_FullMethodName    = "/tasks.Tasks/AddTaskToProject"
-	Tasks_SetTaskStatus_FullMethodName       = "/tasks.Tasks/SetTaskStatus"
-	Tasks_DeleteTaskById_FullMethodName      = "/tasks.Tasks/DeleteTaskById"
-	Tasks_UpdateTask_FullMethodName          = "/tasks.Tasks/UpdateTask"
-	Tasks_GetTaskById_FullMethodName         = "/tasks.Tasks/GetTaskById"
-	Tasks_GetProjectTasks_FullMethodName     = "/tasks.Tasks/GetProjectTasks"
-	Tasks_GetTaskStatusById_FullMethodName   = "/tasks.Tasks/GetTaskStatusById"
-	Tasks_GetTasksByStatus_FullMethodName    = "/tasks.Tasks/GetTasksByStatus"
-	Tasks_GetTasksByPriority_FullMethodName  = "/tasks.Tasks/GetTasksByPriority"
-	Tasks_GetTasksByUserId_FullMethodName    = "/tasks.Tasks/GetTasksByUserId"
-	Tasks_GetTasksInProject_FullMethodName   = "/tasks.Tasks/GetTasksInProject"
+	Tasks_CreateProject_FullMethodName    = "/tasks.Tasks/CreateProject"
+	Tasks_CreateTask_FullMethodName       = "/tasks.Tasks/CreateTask"
+	Tasks_CreateTaskStatus_FullMethodName = "/tasks.Tasks/CreateTaskStatus"
+	Tasks_AddUserToProject_FullMethodName = "/tasks.Tasks/AddUserToProject"
+	Tasks_AddTaskToProject_FullMethodName = "/tasks.Tasks/AddTaskToProject"
+	Tasks_AddUserToTask_FullMethodName    = "/tasks.Tasks/AddUserToTask"
+	Tasks_GetUserProjects_FullMethodName  = "/tasks.Tasks/GetUserProjects"
+	Tasks_GetUserTasks_FullMethodName     = "/tasks.Tasks/GetUserTasks"
+	Tasks_DeleteProject_FullMethodName    = "/tasks.Tasks/DeleteProject"
+	Tasks_UpdateProject_FullMethodName    = "/tasks.Tasks/UpdateProject"
+	Tasks_UpdateTask_FullMethodName       = "/tasks.Tasks/UpdateTask"
+	Tasks_IsUserInProject_FullMethodName  = "/tasks.Tasks/IsUserInProject"
 )
 
 // TasksClient is the client API for Tasks service.
@@ -41,18 +39,16 @@ const (
 type TasksClient interface {
 	CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*CreateProjectResponse, error)
 	CreateTask(ctx context.Context, in *CreateTaskRequest, opts ...grpc.CallOption) (*CreateTaskResponse, error)
-	CreateNewTaskStatus(ctx context.Context, in *CreateNewTaskStatusRequest, opts ...grpc.CallOption) (*CreateNewTaskStatusResponse, error)
-	AddTaskToProject(ctx context.Context, in *AddTaskToProjectRequest, opts ...grpc.CallOption) (*AddTaskToProjectResponse, error)
-	SetTaskStatus(ctx context.Context, in *SetTaskStatusRequest, opts ...grpc.CallOption) (*SetTaskStatusResponse, error)
-	DeleteTaskById(ctx context.Context, in *DeleteTaskByIdRequest, opts ...grpc.CallOption) (*DeleteTaskByIdResponse, error)
+	CreateTaskStatus(ctx context.Context, in *CreateTaskStatusRequest, opts ...grpc.CallOption) (*Empty, error)
+	AddUserToProject(ctx context.Context, in *AddUserToProjectRequest, opts ...grpc.CallOption) (*AddUserToProjectRequest, error)
+	AddTaskToProject(ctx context.Context, in *AddTaskToProjectRequest, opts ...grpc.CallOption) (*AddTaskToProjectRequest, error)
+	AddUserToTask(ctx context.Context, in *AddUserToTaskRequest, opts ...grpc.CallOption) (*Empty, error)
+	GetUserProjects(ctx context.Context, in *GetUserProjectsRequest, opts ...grpc.CallOption) (*GetUserProjectsResponse, error)
+	GetUserTasks(ctx context.Context, in *GetUserTasksRequest, opts ...grpc.CallOption) (*GetUserTasksResponse, error)
+	DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*Empty, error)
+	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*UpdateProjectResponse, error)
 	UpdateTask(ctx context.Context, in *UpdateTaskRequest, opts ...grpc.CallOption) (*UpdateTaskResponse, error)
-	GetTaskById(ctx context.Context, in *GetProjectTasksRequest, opts ...grpc.CallOption) (*Task, error)
-	GetProjectTasks(ctx context.Context, in *GetProjectTasksRequest, opts ...grpc.CallOption) (*TaskList, error)
-	GetTaskStatusById(ctx context.Context, in *GetTaskStatusByIdRequest, opts ...grpc.CallOption) (*GetTaskStatusByIdResponse, error)
-	GetTasksByStatus(ctx context.Context, in *GetTasksByStatusRequest, opts ...grpc.CallOption) (*TaskList, error)
-	GetTasksByPriority(ctx context.Context, in *GetTasksByPriorityRequest, opts ...grpc.CallOption) (*TaskList, error)
-	GetTasksByUserId(ctx context.Context, in *GetTasksByUserIdRequest, opts ...grpc.CallOption) (*TaskList, error)
-	GetTasksInProject(ctx context.Context, in *GetTasksInProjectRequest, opts ...grpc.CallOption) (*TaskList, error)
+	IsUserInProject(ctx context.Context, in *IsUserInProjectRequest, opts ...grpc.CallOption) (*IsUserInProjectResponse, error)
 }
 
 type tasksClient struct {
@@ -83,19 +79,29 @@ func (c *tasksClient) CreateTask(ctx context.Context, in *CreateTaskRequest, opt
 	return out, nil
 }
 
-func (c *tasksClient) CreateNewTaskStatus(ctx context.Context, in *CreateNewTaskStatusRequest, opts ...grpc.CallOption) (*CreateNewTaskStatusResponse, error) {
+func (c *tasksClient) CreateTaskStatus(ctx context.Context, in *CreateTaskStatusRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateNewTaskStatusResponse)
-	err := c.cc.Invoke(ctx, Tasks_CreateNewTaskStatus_FullMethodName, in, out, cOpts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Tasks_CreateTaskStatus_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tasksClient) AddTaskToProject(ctx context.Context, in *AddTaskToProjectRequest, opts ...grpc.CallOption) (*AddTaskToProjectResponse, error) {
+func (c *tasksClient) AddUserToProject(ctx context.Context, in *AddUserToProjectRequest, opts ...grpc.CallOption) (*AddUserToProjectRequest, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AddTaskToProjectResponse)
+	out := new(AddUserToProjectRequest)
+	err := c.cc.Invoke(ctx, Tasks_AddUserToProject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tasksClient) AddTaskToProject(ctx context.Context, in *AddTaskToProjectRequest, opts ...grpc.CallOption) (*AddTaskToProjectRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddTaskToProjectRequest)
 	err := c.cc.Invoke(ctx, Tasks_AddTaskToProject_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -103,20 +109,50 @@ func (c *tasksClient) AddTaskToProject(ctx context.Context, in *AddTaskToProject
 	return out, nil
 }
 
-func (c *tasksClient) SetTaskStatus(ctx context.Context, in *SetTaskStatusRequest, opts ...grpc.CallOption) (*SetTaskStatusResponse, error) {
+func (c *tasksClient) AddUserToTask(ctx context.Context, in *AddUserToTaskRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SetTaskStatusResponse)
-	err := c.cc.Invoke(ctx, Tasks_SetTaskStatus_FullMethodName, in, out, cOpts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Tasks_AddUserToTask_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *tasksClient) DeleteTaskById(ctx context.Context, in *DeleteTaskByIdRequest, opts ...grpc.CallOption) (*DeleteTaskByIdResponse, error) {
+func (c *tasksClient) GetUserProjects(ctx context.Context, in *GetUserProjectsRequest, opts ...grpc.CallOption) (*GetUserProjectsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteTaskByIdResponse)
-	err := c.cc.Invoke(ctx, Tasks_DeleteTaskById_FullMethodName, in, out, cOpts...)
+	out := new(GetUserProjectsResponse)
+	err := c.cc.Invoke(ctx, Tasks_GetUserProjects_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tasksClient) GetUserTasks(ctx context.Context, in *GetUserTasksRequest, opts ...grpc.CallOption) (*GetUserTasksResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserTasksResponse)
+	err := c.cc.Invoke(ctx, Tasks_GetUserTasks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tasksClient) DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, Tasks_DeleteProject_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tasksClient) UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*UpdateProjectResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateProjectResponse)
+	err := c.cc.Invoke(ctx, Tasks_UpdateProject_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -133,70 +169,10 @@ func (c *tasksClient) UpdateTask(ctx context.Context, in *UpdateTaskRequest, opt
 	return out, nil
 }
 
-func (c *tasksClient) GetTaskById(ctx context.Context, in *GetProjectTasksRequest, opts ...grpc.CallOption) (*Task, error) {
+func (c *tasksClient) IsUserInProject(ctx context.Context, in *IsUserInProjectRequest, opts ...grpc.CallOption) (*IsUserInProjectResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Task)
-	err := c.cc.Invoke(ctx, Tasks_GetTaskById_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *tasksClient) GetProjectTasks(ctx context.Context, in *GetProjectTasksRequest, opts ...grpc.CallOption) (*TaskList, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TaskList)
-	err := c.cc.Invoke(ctx, Tasks_GetProjectTasks_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *tasksClient) GetTaskStatusById(ctx context.Context, in *GetTaskStatusByIdRequest, opts ...grpc.CallOption) (*GetTaskStatusByIdResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTaskStatusByIdResponse)
-	err := c.cc.Invoke(ctx, Tasks_GetTaskStatusById_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *tasksClient) GetTasksByStatus(ctx context.Context, in *GetTasksByStatusRequest, opts ...grpc.CallOption) (*TaskList, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TaskList)
-	err := c.cc.Invoke(ctx, Tasks_GetTasksByStatus_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *tasksClient) GetTasksByPriority(ctx context.Context, in *GetTasksByPriorityRequest, opts ...grpc.CallOption) (*TaskList, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TaskList)
-	err := c.cc.Invoke(ctx, Tasks_GetTasksByPriority_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *tasksClient) GetTasksByUserId(ctx context.Context, in *GetTasksByUserIdRequest, opts ...grpc.CallOption) (*TaskList, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TaskList)
-	err := c.cc.Invoke(ctx, Tasks_GetTasksByUserId_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *tasksClient) GetTasksInProject(ctx context.Context, in *GetTasksInProjectRequest, opts ...grpc.CallOption) (*TaskList, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TaskList)
-	err := c.cc.Invoke(ctx, Tasks_GetTasksInProject_FullMethodName, in, out, cOpts...)
+	out := new(IsUserInProjectResponse)
+	err := c.cc.Invoke(ctx, Tasks_IsUserInProject_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -209,18 +185,16 @@ func (c *tasksClient) GetTasksInProject(ctx context.Context, in *GetTasksInProje
 type TasksServer interface {
 	CreateProject(context.Context, *CreateProjectRequest) (*CreateProjectResponse, error)
 	CreateTask(context.Context, *CreateTaskRequest) (*CreateTaskResponse, error)
-	CreateNewTaskStatus(context.Context, *CreateNewTaskStatusRequest) (*CreateNewTaskStatusResponse, error)
-	AddTaskToProject(context.Context, *AddTaskToProjectRequest) (*AddTaskToProjectResponse, error)
-	SetTaskStatus(context.Context, *SetTaskStatusRequest) (*SetTaskStatusResponse, error)
-	DeleteTaskById(context.Context, *DeleteTaskByIdRequest) (*DeleteTaskByIdResponse, error)
+	CreateTaskStatus(context.Context, *CreateTaskStatusRequest) (*Empty, error)
+	AddUserToProject(context.Context, *AddUserToProjectRequest) (*AddUserToProjectRequest, error)
+	AddTaskToProject(context.Context, *AddTaskToProjectRequest) (*AddTaskToProjectRequest, error)
+	AddUserToTask(context.Context, *AddUserToTaskRequest) (*Empty, error)
+	GetUserProjects(context.Context, *GetUserProjectsRequest) (*GetUserProjectsResponse, error)
+	GetUserTasks(context.Context, *GetUserTasksRequest) (*GetUserTasksResponse, error)
+	DeleteProject(context.Context, *DeleteProjectRequest) (*Empty, error)
+	UpdateProject(context.Context, *UpdateProjectRequest) (*UpdateProjectResponse, error)
 	UpdateTask(context.Context, *UpdateTaskRequest) (*UpdateTaskResponse, error)
-	GetTaskById(context.Context, *GetProjectTasksRequest) (*Task, error)
-	GetProjectTasks(context.Context, *GetProjectTasksRequest) (*TaskList, error)
-	GetTaskStatusById(context.Context, *GetTaskStatusByIdRequest) (*GetTaskStatusByIdResponse, error)
-	GetTasksByStatus(context.Context, *GetTasksByStatusRequest) (*TaskList, error)
-	GetTasksByPriority(context.Context, *GetTasksByPriorityRequest) (*TaskList, error)
-	GetTasksByUserId(context.Context, *GetTasksByUserIdRequest) (*TaskList, error)
-	GetTasksInProject(context.Context, *GetTasksInProjectRequest) (*TaskList, error)
+	IsUserInProject(context.Context, *IsUserInProjectRequest) (*IsUserInProjectResponse, error)
 	mustEmbedUnimplementedTasksServer()
 }
 
@@ -237,41 +211,35 @@ func (UnimplementedTasksServer) CreateProject(context.Context, *CreateProjectReq
 func (UnimplementedTasksServer) CreateTask(context.Context, *CreateTaskRequest) (*CreateTaskResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTask not implemented")
 }
-func (UnimplementedTasksServer) CreateNewTaskStatus(context.Context, *CreateNewTaskStatusRequest) (*CreateNewTaskStatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateNewTaskStatus not implemented")
+func (UnimplementedTasksServer) CreateTaskStatus(context.Context, *CreateTaskStatusRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTaskStatus not implemented")
 }
-func (UnimplementedTasksServer) AddTaskToProject(context.Context, *AddTaskToProjectRequest) (*AddTaskToProjectResponse, error) {
+func (UnimplementedTasksServer) AddUserToProject(context.Context, *AddUserToProjectRequest) (*AddUserToProjectRequest, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddUserToProject not implemented")
+}
+func (UnimplementedTasksServer) AddTaskToProject(context.Context, *AddTaskToProjectRequest) (*AddTaskToProjectRequest, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddTaskToProject not implemented")
 }
-func (UnimplementedTasksServer) SetTaskStatus(context.Context, *SetTaskStatusRequest) (*SetTaskStatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetTaskStatus not implemented")
+func (UnimplementedTasksServer) AddUserToTask(context.Context, *AddUserToTaskRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddUserToTask not implemented")
 }
-func (UnimplementedTasksServer) DeleteTaskById(context.Context, *DeleteTaskByIdRequest) (*DeleteTaskByIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteTaskById not implemented")
+func (UnimplementedTasksServer) GetUserProjects(context.Context, *GetUserProjectsRequest) (*GetUserProjectsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserProjects not implemented")
+}
+func (UnimplementedTasksServer) GetUserTasks(context.Context, *GetUserTasksRequest) (*GetUserTasksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserTasks not implemented")
+}
+func (UnimplementedTasksServer) DeleteProject(context.Context, *DeleteProjectRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteProject not implemented")
+}
+func (UnimplementedTasksServer) UpdateProject(context.Context, *UpdateProjectRequest) (*UpdateProjectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateProject not implemented")
 }
 func (UnimplementedTasksServer) UpdateTask(context.Context, *UpdateTaskRequest) (*UpdateTaskResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTask not implemented")
 }
-func (UnimplementedTasksServer) GetTaskById(context.Context, *GetProjectTasksRequest) (*Task, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTaskById not implemented")
-}
-func (UnimplementedTasksServer) GetProjectTasks(context.Context, *GetProjectTasksRequest) (*TaskList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetProjectTasks not implemented")
-}
-func (UnimplementedTasksServer) GetTaskStatusById(context.Context, *GetTaskStatusByIdRequest) (*GetTaskStatusByIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTaskStatusById not implemented")
-}
-func (UnimplementedTasksServer) GetTasksByStatus(context.Context, *GetTasksByStatusRequest) (*TaskList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTasksByStatus not implemented")
-}
-func (UnimplementedTasksServer) GetTasksByPriority(context.Context, *GetTasksByPriorityRequest) (*TaskList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTasksByPriority not implemented")
-}
-func (UnimplementedTasksServer) GetTasksByUserId(context.Context, *GetTasksByUserIdRequest) (*TaskList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTasksByUserId not implemented")
-}
-func (UnimplementedTasksServer) GetTasksInProject(context.Context, *GetTasksInProjectRequest) (*TaskList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTasksInProject not implemented")
+func (UnimplementedTasksServer) IsUserInProject(context.Context, *IsUserInProjectRequest) (*IsUserInProjectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsUserInProject not implemented")
 }
 func (UnimplementedTasksServer) mustEmbedUnimplementedTasksServer() {}
 func (UnimplementedTasksServer) testEmbeddedByValue()               {}
@@ -330,20 +298,38 @@ func _Tasks_CreateTask_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Tasks_CreateNewTaskStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateNewTaskStatusRequest)
+func _Tasks_CreateTaskStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTaskStatusRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TasksServer).CreateNewTaskStatus(ctx, in)
+		return srv.(TasksServer).CreateTaskStatus(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Tasks_CreateNewTaskStatus_FullMethodName,
+		FullMethod: Tasks_CreateTaskStatus_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TasksServer).CreateNewTaskStatus(ctx, req.(*CreateNewTaskStatusRequest))
+		return srv.(TasksServer).CreateTaskStatus(ctx, req.(*CreateTaskStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Tasks_AddUserToProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddUserToProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TasksServer).AddUserToProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Tasks_AddUserToProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TasksServer).AddUserToProject(ctx, req.(*AddUserToProjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -366,38 +352,92 @@ func _Tasks_AddTaskToProject_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Tasks_SetTaskStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetTaskStatusRequest)
+func _Tasks_AddUserToTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddUserToTaskRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TasksServer).SetTaskStatus(ctx, in)
+		return srv.(TasksServer).AddUserToTask(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Tasks_SetTaskStatus_FullMethodName,
+		FullMethod: Tasks_AddUserToTask_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TasksServer).SetTaskStatus(ctx, req.(*SetTaskStatusRequest))
+		return srv.(TasksServer).AddUserToTask(ctx, req.(*AddUserToTaskRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Tasks_DeleteTaskById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteTaskByIdRequest)
+func _Tasks_GetUserProjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserProjectsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TasksServer).DeleteTaskById(ctx, in)
+		return srv.(TasksServer).GetUserProjects(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Tasks_DeleteTaskById_FullMethodName,
+		FullMethod: Tasks_GetUserProjects_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TasksServer).DeleteTaskById(ctx, req.(*DeleteTaskByIdRequest))
+		return srv.(TasksServer).GetUserProjects(ctx, req.(*GetUserProjectsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Tasks_GetUserTasks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserTasksRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TasksServer).GetUserTasks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Tasks_GetUserTasks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TasksServer).GetUserTasks(ctx, req.(*GetUserTasksRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Tasks_DeleteProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TasksServer).DeleteProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Tasks_DeleteProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TasksServer).DeleteProject(ctx, req.(*DeleteProjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Tasks_UpdateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TasksServer).UpdateProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Tasks_UpdateProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TasksServer).UpdateProject(ctx, req.(*UpdateProjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -420,128 +460,20 @@ func _Tasks_UpdateTask_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Tasks_GetTaskById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProjectTasksRequest)
+func _Tasks_IsUserInProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsUserInProjectRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TasksServer).GetTaskById(ctx, in)
+		return srv.(TasksServer).IsUserInProject(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Tasks_GetTaskById_FullMethodName,
+		FullMethod: Tasks_IsUserInProject_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TasksServer).GetTaskById(ctx, req.(*GetProjectTasksRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Tasks_GetProjectTasks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProjectTasksRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TasksServer).GetProjectTasks(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Tasks_GetProjectTasks_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TasksServer).GetProjectTasks(ctx, req.(*GetProjectTasksRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Tasks_GetTaskStatusById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTaskStatusByIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TasksServer).GetTaskStatusById(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Tasks_GetTaskStatusById_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TasksServer).GetTaskStatusById(ctx, req.(*GetTaskStatusByIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Tasks_GetTasksByStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTasksByStatusRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TasksServer).GetTasksByStatus(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Tasks_GetTasksByStatus_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TasksServer).GetTasksByStatus(ctx, req.(*GetTasksByStatusRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Tasks_GetTasksByPriority_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTasksByPriorityRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TasksServer).GetTasksByPriority(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Tasks_GetTasksByPriority_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TasksServer).GetTasksByPriority(ctx, req.(*GetTasksByPriorityRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Tasks_GetTasksByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTasksByUserIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TasksServer).GetTasksByUserId(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Tasks_GetTasksByUserId_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TasksServer).GetTasksByUserId(ctx, req.(*GetTasksByUserIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Tasks_GetTasksInProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTasksInProjectRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TasksServer).GetTasksInProject(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Tasks_GetTasksInProject_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TasksServer).GetTasksInProject(ctx, req.(*GetTasksInProjectRequest))
+		return srv.(TasksServer).IsUserInProject(ctx, req.(*IsUserInProjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -562,52 +494,44 @@ var Tasks_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Tasks_CreateTask_Handler,
 		},
 		{
-			MethodName: "CreateNewTaskStatus",
-			Handler:    _Tasks_CreateNewTaskStatus_Handler,
+			MethodName: "CreateTaskStatus",
+			Handler:    _Tasks_CreateTaskStatus_Handler,
+		},
+		{
+			MethodName: "AddUserToProject",
+			Handler:    _Tasks_AddUserToProject_Handler,
 		},
 		{
 			MethodName: "AddTaskToProject",
 			Handler:    _Tasks_AddTaskToProject_Handler,
 		},
 		{
-			MethodName: "SetTaskStatus",
-			Handler:    _Tasks_SetTaskStatus_Handler,
+			MethodName: "AddUserToTask",
+			Handler:    _Tasks_AddUserToTask_Handler,
 		},
 		{
-			MethodName: "DeleteTaskById",
-			Handler:    _Tasks_DeleteTaskById_Handler,
+			MethodName: "GetUserProjects",
+			Handler:    _Tasks_GetUserProjects_Handler,
+		},
+		{
+			MethodName: "GetUserTasks",
+			Handler:    _Tasks_GetUserTasks_Handler,
+		},
+		{
+			MethodName: "DeleteProject",
+			Handler:    _Tasks_DeleteProject_Handler,
+		},
+		{
+			MethodName: "UpdateProject",
+			Handler:    _Tasks_UpdateProject_Handler,
 		},
 		{
 			MethodName: "UpdateTask",
 			Handler:    _Tasks_UpdateTask_Handler,
 		},
 		{
-			MethodName: "GetTaskById",
-			Handler:    _Tasks_GetTaskById_Handler,
-		},
-		{
-			MethodName: "GetProjectTasks",
-			Handler:    _Tasks_GetProjectTasks_Handler,
-		},
-		{
-			MethodName: "GetTaskStatusById",
-			Handler:    _Tasks_GetTaskStatusById_Handler,
-		},
-		{
-			MethodName: "GetTasksByStatus",
-			Handler:    _Tasks_GetTasksByStatus_Handler,
-		},
-		{
-			MethodName: "GetTasksByPriority",
-			Handler:    _Tasks_GetTasksByPriority_Handler,
-		},
-		{
-			MethodName: "GetTasksByUserId",
-			Handler:    _Tasks_GetTasksByUserId_Handler,
-		},
-		{
-			MethodName: "GetTasksInProject",
-			Handler:    _Tasks_GetTasksInProject_Handler,
+			MethodName: "IsUserInProject",
+			Handler:    _Tasks_IsUserInProject_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

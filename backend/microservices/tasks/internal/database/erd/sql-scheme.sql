@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS tasks
     task_id     TEXT        NOT NULL GENERATED ALWAYS AS IDENTITY,
     title       TEXT          NOT NULL,
     description TEXT,
-    priority    task_priority NOT NULL,
+    priority    TEXT NOT NULL,
     user_id     TEXT          NOT NULL, --- Автор задачи.
     created_at  TIMESTAMP,
     deadline    TIMESTAMP,

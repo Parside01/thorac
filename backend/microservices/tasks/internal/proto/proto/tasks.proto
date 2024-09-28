@@ -6,18 +6,270 @@ option go_package = "/tasks;tasks";
 
 // generate command: protoc --proto_path=proto/proto --go_out=proto/gen/go/ --go-grpc_out=proto/gen/go/ proto/proto/*.proto
 
-message CreateProjectRequest {
+//message CreateProjectRequest {
+//    string user_id = 1;
+//    string title = 2;
+//    string description = 3;
+//}
+//
+//message CreateProjectResponse {
+//    string user_id = 1;
+//    string project_id = 2;
+//    string title = 3;
+//    string description = 4;
+//    string created_at = 5;
+//}
+//
+//message CreateTaskRequest {
+//    string user_id = 1;
+//    string project_id = 2;
+//    string title = 3;
+//    string description = 4;
+//    string priority = 5;
+//    string deadline = 6;
+//}
+//
+//message CreateTaskResponse {
+//    string user_id = 1;
+//    string task_id = 2;
+//    string title = 3;
+//    string description = 4;
+//    string priority = 5;
+//    string created_at = 6;
+//    string deadline = 7;
+//}
+//
+//message AddTaskToProjectRequest {
+//    string user_id = 1;
+//    string project_id = 2;
+//    string task_id = 3;
+//}
+//
+//message AddTaskToProjectResponse {}
+//
+//message CreateNewTaskStatusRequest {
+//    string user_id = 1;
+//    string project_id = 2;
+//    string status_type = 3;
+//}
+//
+//message CreateNewTaskStatusResponse {
+//    string status_id = 1;
+//    string owner_project_id = 2;
+//    string status_type = 3;
+//}
+//
+//message SetTaskStatusRequest {
+//    string user_id = 1;
+//    string task_id = 2;
+//    string status_id = 3;
+//}
+//message SetTaskStatusResponse {}
+//
+//message Task {
+//    string user_id = 1;
+//    string task_id = 2;
+//    string title = 3;
+//    string description = 4;
+//    string priority = 5;
+//    string created_at = 6;
+//    string deadline = 7;
+//}
+//message TaskList {
+//    repeated Task tasks = 1;
+//}
+//message GetProjectTasksRequest {
+//    string user_id = 1;
+//    string project_id = 2;
+//}
+//
+//message GetTaskByIdRequest {
+//    string user_id = 1;
+//    string task_id = 2;
+//}
+//
+//message DeleteTaskByIdRequest {
+//    string user_id = 1;
+//    string task_id = 2;
+//}
+//message DeleteTaskByIdResponse {}
+//
+//message UpdateTaskRequest {
+//    string user_id = 1;
+//    string task_id = 2;
+//    string title = 3;
+//    string description = 4;
+//    string priority = 5;
+//    string deadline = 6;
+//}
+//message UpdateTaskResponse {}
+//
+//message GetTaskStatusByIdRequest {
+//    string user_id = 1;
+//    string task_id = 2;
+//}
+//
+//message GetTaskStatusByIdResponse {
+//    string status_type = 1;
+//}
+//
+//message GetTasksByStatusRequest {
+//    string user_id = 1;
+//    string project_id = 2;
+//    string status_id = 3;
+//}
+//
+//message GetTasksByPriorityRequest {
+//    string user_id = 1;
+//    string project_id = 2;
+//    string priority = 3;
+//}
+//
+//message GetTasksByUserIdRequest {
+//    string user_id = 1;
+//}
+//
+//message GetTasksInProjectRequest {
+//    string user_id = 1;
+//    string project_id = 2;
+//}
+//
+//service Tasks {
+//    rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
+//    rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse);
+//    rpc CreateNewTaskStatus(CreateNewTaskStatusRequest) returns (CreateNewTaskStatusResponse);
+//
+//    rpc AddTaskToProject(AddTaskToProjectRequest) returns (AddTaskToProjectResponse);
+//    rpc SetTaskStatus(SetTaskStatusRequest) returns (SetTaskStatusResponse);
+//    rpc DeleteTaskById(DeleteTaskByIdRequest) returns (DeleteTaskByIdResponse);
+//    rpc UpdateTask(UpdateTaskRequest) returns (UpdateTaskResponse);
+//
+//    rpc GetTaskById(GetProjectTasksRequest) returns (Task);
+//    rpc GetProjectTasks(GetProjectTasksRequest) returns (TaskList);
+//    rpc GetTaskStatusById(GetTaskStatusByIdRequest) returns (GetTaskStatusByIdResponse);
+//    rpc GetTasksByStatus(GetTasksByStatusRequest) returns (TaskList);
+//    rpc GetTasksByPriority(GetTasksByPriorityRequest) returns (TaskList);
+//    rpc GetTasksByUserId(GetTasksByUserIdRequest) returns (TaskList);
+//    rpc GetTasksInProject(GetTasksInProjectRequest) returns (TaskList);
+//}
+
+
+service Tasks {
+    rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
+    rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse);
+    rpc CreateTaskStatus(CreateTaskStatusRequest) returns (Empty);
+
+    rpc AddUserToProject(AddUserToProjectRequest) returns (AddUserToProjectRequest);
+    rpc AddTaskToProject(AddTaskToProjectRequest) returns (AddTaskToProjectRequest);
+    rpc AddUserToTask(AddUserToTaskRequest) returns (Empty);
+
+    rpc GetUserProjects(GetUserProjectsRequest) returns (GetUserProjectsResponse);
+    rpc GetUserTasks(GetUserTasksRequest) returns (GetUserTasksResponse);
+
+    rpc DeleteProject(DeleteProjectRequest) returns (Empty);
+
+    rpc UpdateProject(UpdateProjectRequest) returns (UpdateProjectResponse);
+    rpc UpdateTask(UpdateTaskRequest) returns (UpdateTaskResponse);
+
+    rpc IsUserInProject(IsUserInProjectRequest) returns (IsUserInProjectResponse);
+}
+
+message GetUserTasksRequest {
+    string user_id = 1;
+}
+
+message Task {
+    string user_id = 1;
+    string task_id = 2;
+    string title = 3;
+    string description = 4;
+    string priority = 5;
+}
+
+message GetUserTasksResponse {
+    repeated Task tasks = 1;
+}
+
+
+message GetUserProjectsRequest {
+    string user_id = 1;
+}
+
+message GetUserProjectsResponse {
+    repeated Project projects = 1;
+}
+
+message Project {
+    string project_id = 1;
+    string user_id = 2;
+    string title = 3;
+    string description = 4;
+    string created_at = 5;
+}
+
+message DeleteProjectRequest {
+    string project_id = 1;
+}
+
+message AddUserToTaskRequest {
+    string user_id = 1;
+    string task_id = 2;
+}
+
+message UpdateTaskRequest {
+    string user_id = 1;
+    string task_id = 2;
+    string title = 3;
+    string description = 4;
+    string priority = 5;
+}
+
+message UpdateTaskResponse {
+    string user_id = 1;
+    string task_id = 2;
+    string title = 3;
+    string description = 4;
+    string priority = 5;
+}
+
+message UpdateProjectRequest {
     string user_id = 1;
     string title = 2;
     string description = 3;
 }
 
-message CreateProjectResponse {
-    string user_id = 1;
-    string project_id = 2;
+message UpdateProjectResponse {
+    string project_id = 1;
+    string user_id = 2;
     string title = 3;
     string description = 4;
     string created_at = 5;
+}
+
+message AddTaskToProjectRequest {
+    string user_id = 1;
+    string task_id = 2;
+    string project_id = 3;
+}
+
+message AddUserToProjectRequest {
+    string user_id = 1;
+    string project_id = 2;
+}
+
+message CreateTaskStatusRequest {
+    string user_id = 1;
+    string project_id = 2;
+    string type = 3;
+}
+
+message IsUserInProjectRequest {
+    string user_id = 1;
+    string project_id = 2;
+}
+
+message IsUserInProjectResponse {
+    bool in_project = 1;
 }
 
 message CreateTaskRequest {
@@ -25,7 +277,6 @@ message CreateTaskRequest {
     string title = 2;
     string description = 3;
     string priority = 4;
-    string deadline = 5;
 }
 
 message CreateTaskResponse {
@@ -34,120 +285,20 @@ message CreateTaskResponse {
     string title = 3;
     string description = 4;
     string priority = 5;
-    string created_at = 6;
-    string deadline = 7;
 }
 
-message AddTaskToProjectRequest {
+message CreateProjectRequest {
     string user_id = 1;
-    string project_id = 2;
-    string task_id = 3;
+    string title = 2;
+    string description = 3;
 }
 
-message AddTaskToProjectResponse {}
-
-message CreateNewTaskStatusRequest {
-    string user_id = 1;
-    string project_id = 2;
-    string status_type = 3;
-}
-
-message CreateNewTaskStatusResponse {
-    string status_id = 1;
-    string owner_project_id = 2;
-    string status_type = 3;
-}
-
-message SetTaskStatusRequest {
-    string user_id = 1;
-    string task_id = 2;
-    string status_id = 3;
-}
-message SetTaskStatusResponse {}
-
-message Task {
-    string user_id = 1;
-    string task_id = 2;
+message CreateProjectResponse {
+    string project_id = 1;
+    string user_id = 2;
     string title = 3;
     string description = 4;
-    string priority = 5;
-    string created_at = 6;
-    string deadline = 7;
-}
-message TaskList {
-    repeated Task tasks = 1;
-}
-message GetProjectTasksRequest {
-    string user_id = 1;
-    string project_id = 2;
+    string created_at = 5;
 }
 
-message GetTaskByIdRequest {
-    string user_id = 1;
-    string task_id = 2;
-}
-
-message DeleteTaskByIdRequest {
-    string user_id = 1;
-    string task_id = 2;
-}
-message DeleteTaskByIdResponse {}
-
-message UpdateTaskRequest {
-    string user_id = 1;
-    string task_id = 2;
-    string title = 3;
-    string description = 4;
-    string priority = 5;
-    string deadline = 6;
-}
-message UpdateTaskResponse {}
-
-message GetTaskStatusByIdRequest {
-    string user_id = 1;
-    string task_id = 2;
-}
-
-message GetTaskStatusByIdResponse {
-    string status_type = 1;
-}
-
-message GetTasksByStatusRequest {
-    string user_id = 1;
-    string project_id = 2;
-    string status_id = 3;
-}
-
-message GetTasksByPriorityRequest {
-    string user_id = 1;
-    string project_id = 2;
-    string priority = 3;
-}
-
-message GetTasksByUserIdRequest {
-    string user_id = 1;
-}
-
-message GetTasksInProjectRequest {
-    string user_id = 1;
-    string project_id = 2;
-}
-
-service Tasks {
-    rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
-    rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse);
-    rpc CreateNewTaskStatus(CreateNewTaskStatusRequest) returns (CreateNewTaskStatusResponse);
-
-    rpc AddTaskToProject(AddTaskToProjectRequest) returns (AddTaskToProjectResponse);
-    rpc SetTaskStatus(SetTaskStatusRequest) returns (SetTaskStatusResponse);
-    rpc DeleteTaskById(DeleteTaskByIdRequest) returns (DeleteTaskByIdResponse);
-    rpc UpdateTask(UpdateTaskRequest) returns (UpdateTaskResponse);
-
-    rpc GetTaskById(GetProjectTasksRequest) returns (Task);
-    rpc GetProjectTasks(GetProjectTasksRequest) returns (TaskList);
-    rpc GetTaskStatusById(GetTaskStatusByIdRequest) returns (GetTaskStatusByIdResponse);
-    rpc GetTasksByStatus(GetTasksByStatusRequest) returns (TaskList);
-    rpc GetTasksByPriority(GetTasksByPriorityRequest) returns (TaskList);
-    rpc GetTasksByUserId(GetTasksByUserIdRequest) returns (TaskList);
-    rpc GetTasksInProject(GetTasksInProjectRequest) returns (TaskList);
-}
+message Empty {}
