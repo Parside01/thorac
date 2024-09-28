@@ -1,6 +1,6 @@
 -- name: CreateProject :one
 WITH new_project AS (
-    INSERT INTO projects (title, description, author_name, created_at)
+    INSERT INTO projects (title, description, user_id, created_at)
         VALUES ($1, $2, $3, $4)
         RETURNING *)
 INSERT
@@ -11,7 +11,7 @@ RETURNING *;
 
 -- name: CreateTask :one
 WITH new_task AS (
-    INSERT INTO tasks (title, description, priority, author_name, created_at, deadline)
+    INSERT INTO tasks (title, description, priority, user_id, created_at, deadline)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *),
 new_project_task AS (
@@ -73,7 +73,7 @@ UPDATE tasks
 SET title       = $2,
     description = $3,
     priority    = $4,
-    author_name = $5,
+    user_id = $5,
     created_at  = $6,
     deadline    = $7
 WHERE task_id = $1;
@@ -103,7 +103,7 @@ WHERE priority = $1;
 -- name: GetTasksByAuthor :many
 SELECT *
 FROM tasks
-WHERE author_name = $1;
+WHERE user_id = $1;
 
 -- name: GetTasksByDeadline :many
 SELECT *

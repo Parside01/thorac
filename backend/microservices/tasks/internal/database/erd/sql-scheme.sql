@@ -5,7 +5,7 @@ CREATE TABLE projects
     project_id  BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY,
     title       TEXT   NOT NULL,
     description TEXT,
-    author_name TEXT   NOT NULL,
+    user_id TEXT   NOT NULL,
     created_at  TIMESTAMP,
     PRIMARY KEY (project_id)
 );
@@ -16,7 +16,7 @@ CREATE TABLE tasks
     title       TEXT          NOT NULL,
     description TEXT,
     priority    task_priority NOT NULL,
-    author_name TEXT          NOT NULL,
+    user_id TEXT          NOT NULL,
     created_at  TIMESTAMP,
     deadline    TIMESTAMP,
     PRIMARY KEY (task_id)
