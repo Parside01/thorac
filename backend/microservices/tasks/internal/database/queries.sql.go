@@ -21,14 +21,32 @@ SELECT $3, task_id FROM new_project_task
 `
 
 type AddTaskToProjectParams struct {
-	TaskID    int64
-	ProjectID int64
-	UserID    int64
+	TaskID    string
+	ProjectID string
+	UserID    string
 }
 
 func (q *Queries) AddTaskToProject(ctx context.Context, arg AddTaskToProjectParams) error {
 	_, err := q.db.ExecContext(ctx, addTaskToProject, arg.TaskID, arg.ProjectID, arg.UserID)
 	return err
+}
+
+const addUserToProject = `-- name: AddUserToProject :one
+INSERT INTO users_projects (user_id, project_id)
+VALUES ($1, $2)
+RETURNING user_id, project_id
+`
+
+type AddUserToProjectParams struct {
+	UserID    string
+	ProjectID string
+}
+
+func (q *Queries) AddUserToProject(ctx context.Context, arg AddUserToProjectParams) (UsersProject, error) {
+	row := q.db.QueryRowContext(ctx, addUserToProject, arg.UserID, arg.ProjectID)
+	var i UsersProject
+	err := row.Scan(&i.UserID, &i.ProjectID)
+	return i, err
 }
 
 const createNewTaskStatus = `-- name: CreateNewTaskStatus :one
@@ -38,7 +56,7 @@ RETURNING task_status_types_id, owner_project_id, type
 `
 
 type CreateNewTaskStatusParams struct {
-	OwnerProjectID int64
+	OwnerProjectID string
 	Type           string
 }
 
@@ -50,43 +68,35 @@ func (q *Queries) CreateNewTaskStatus(ctx context.Context, arg CreateNewTaskStat
 }
 
 const createProject = `-- name: CreateProject :one
-WITH new_project AS (
-    INSERT INTO projects (title, description, author_name, created_at)
-        VALUES ($1, $2, $3, $4)
-        RETURNING project_id, title, description, author_name, created_at)
-INSERT
-INTO users_projects (user_id, project_id)
-SELECT $5, project_id
-FROM new_project
-RETURNING user_id, project_id
+INSERT INTO projects (title, description, user_id, created_at)
+VALUES ($1, $2, $3, NOW())
+RETURNING project_id, title, description, user_id, created_at
 `
 
 type CreateProjectParams struct {
 	Title       string
 	Description sql.NullString
-	AuthorName  string
-	CreatedAt   sql.NullTime
-	UserID      int64
+	UserID      string
 }
 
-func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) (UsersProject, error) {
-	row := q.db.QueryRowContext(ctx, createProject,
-		arg.Title,
-		arg.Description,
-		arg.AuthorName,
-		arg.CreatedAt,
-		arg.UserID,
+func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) (Project, error) {
+	row := q.db.QueryRowContext(ctx, createProject, arg.Title, arg.Description, arg.UserID)
+	var i Project
+	err := row.Scan(
+		&i.ProjectID,
+		&i.Title,
+		&i.Description,
+		&i.UserID,
+		&i.CreatedAt,
 	)
-	var i UsersProject
-	err := row.Scan(&i.UserID, &i.ProjectID)
 	return i, err
 }
 
 const createTask = `-- name: CreateTask :one
 WITH new_task AS (
-    INSERT INTO tasks (title, description, priority, author_name, created_at, deadline)
+    INSERT INTO tasks (title, description, priority, user_id, created_at, deadline)
         VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING task_id, title, description, priority, author_name, created_at, deadline),
+        RETURNING task_id, title, description, priority, user_id, created_at, deadline),
 new_project_task AS (
     INSERT INTO project_tasks (task_id, project_id)
     SELECT task_id, $7 FROM new_task
@@ -103,11 +113,11 @@ type CreateTaskParams struct {
 	Title       string
 	Description sql.NullString
 	Priority    TaskPriority
-	AuthorName  string
+	UserID      string
 	CreatedAt   sql.NullTime
 	Deadline    sql.NullTime
-	ProjectID   int64
-	UserID      int64
+	ProjectID   string
+	UserID_2    string
 }
 
 func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) (UsersTask, error) {
@@ -115,11 +125,11 @@ func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) (UsersTa
 		arg.Title,
 		arg.Description,
 		arg.Priority,
-		arg.AuthorName,
+		arg.UserID,
 		arg.CreatedAt,
 		arg.Deadline,
 		arg.ProjectID,
-		arg.UserID,
+		arg.UserID_2,
 	)
 	var i UsersTask
 	err := row.Scan(&i.UserID, &i.TaskID)
@@ -132,7 +142,7 @@ FROM tasks
 WHERE task_id = $1
 `
 
-func (q *Queries) DeleteTask(ctx context.Context, taskID int64) error {
+func (q *Queries) DeleteTask(ctx context.Context, taskID string) error {
 	_, err := q.db.ExecContext(ctx, deleteTask, taskID)
 	return err
 }
@@ -166,7 +176,7 @@ func (q *Queries) GetAllTaskStatuses(ctx context.Context) ([]TaskStatusType, err
 }
 
 const getAllTasks = `-- name: GetAllTasks :many
-SELECT task_id, title, description, priority, author_name, created_at, deadline
+SELECT task_id, title, description, priority, user_id, created_at, deadline
 FROM tasks
 `
 
@@ -184,7 +194,7 @@ func (q *Queries) GetAllTasks(ctx context.Context) ([]Task, error) {
 			&i.Title,
 			&i.Description,
 			&i.Priority,
-			&i.AuthorName,
+			&i.UserID,
 			&i.CreatedAt,
 			&i.Deadline,
 		); err != nil {
@@ -202,12 +212,12 @@ func (q *Queries) GetAllTasks(ctx context.Context) ([]Task, error) {
 }
 
 const getTaskById = `-- name: GetTaskById :one
-SELECT task_id, title, description, priority, author_name, created_at, deadline
+SELECT task_id, title, description, priority, user_id, created_at, deadline
 FROM tasks
 WHERE task_id = $1
 `
 
-func (q *Queries) GetTaskById(ctx context.Context, taskID int64) (Task, error) {
+func (q *Queries) GetTaskById(ctx context.Context, taskID string) (Task, error) {
 	row := q.db.QueryRowContext(ctx, getTaskById, taskID)
 	var i Task
 	err := row.Scan(
@@ -215,7 +225,7 @@ func (q *Queries) GetTaskById(ctx context.Context, taskID int64) (Task, error) {
 		&i.Title,
 		&i.Description,
 		&i.Priority,
-		&i.AuthorName,
+		&i.UserID,
 		&i.CreatedAt,
 		&i.Deadline,
 	)
@@ -229,7 +239,7 @@ FROM task_statuses AS ts
 WHERE ts.task_id = $1
 `
 
-func (q *Queries) GetTaskStatusByTaskId(ctx context.Context, taskID int64) (string, error) {
+func (q *Queries) GetTaskStatusByTaskId(ctx context.Context, taskID string) (string, error) {
 	row := q.db.QueryRowContext(ctx, getTaskStatusByTaskId, taskID)
 	var type_ string
 	err := row.Scan(&type_)
@@ -237,13 +247,13 @@ func (q *Queries) GetTaskStatusByTaskId(ctx context.Context, taskID int64) (stri
 }
 
 const getTasksByAuthor = `-- name: GetTasksByAuthor :many
-SELECT task_id, title, description, priority, author_name, created_at, deadline
+SELECT task_id, title, description, priority, user_id, created_at, deadline
 FROM tasks
-WHERE author_name = $1
+WHERE user_id = $1
 `
 
-func (q *Queries) GetTasksByAuthor(ctx context.Context, authorName string) ([]Task, error) {
-	rows, err := q.db.QueryContext(ctx, getTasksByAuthor, authorName)
+func (q *Queries) GetTasksByAuthor(ctx context.Context, userID string) ([]Task, error) {
+	rows, err := q.db.QueryContext(ctx, getTasksByAuthor, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +266,7 @@ func (q *Queries) GetTasksByAuthor(ctx context.Context, authorName string) ([]Ta
 			&i.Title,
 			&i.Description,
 			&i.Priority,
-			&i.AuthorName,
+			&i.UserID,
 			&i.CreatedAt,
 			&i.Deadline,
 		); err != nil {
@@ -274,7 +284,7 @@ func (q *Queries) GetTasksByAuthor(ctx context.Context, authorName string) ([]Ta
 }
 
 const getTasksByDeadline = `-- name: GetTasksByDeadline :many
-SELECT task_id, title, description, priority, author_name, created_at, deadline
+SELECT task_id, title, description, priority, user_id, created_at, deadline
 FROM tasks
 WHERE deadline <= $1
 `
@@ -293,7 +303,7 @@ func (q *Queries) GetTasksByDeadline(ctx context.Context, deadline sql.NullTime)
 			&i.Title,
 			&i.Description,
 			&i.Priority,
-			&i.AuthorName,
+			&i.UserID,
 			&i.CreatedAt,
 			&i.Deadline,
 		); err != nil {
@@ -311,7 +321,7 @@ func (q *Queries) GetTasksByDeadline(ctx context.Context, deadline sql.NullTime)
 }
 
 const getTasksByPriority = `-- name: GetTasksByPriority :many
-SELECT task_id, title, description, priority, author_name, created_at, deadline
+SELECT task_id, title, description, priority, user_id, created_at, deadline
 FROM tasks
 WHERE priority = $1
 `
@@ -330,7 +340,7 @@ func (q *Queries) GetTasksByPriority(ctx context.Context, priority TaskPriority)
 			&i.Title,
 			&i.Description,
 			&i.Priority,
-			&i.AuthorName,
+			&i.UserID,
 			&i.CreatedAt,
 			&i.Deadline,
 		); err != nil {
@@ -348,13 +358,13 @@ func (q *Queries) GetTasksByPriority(ctx context.Context, priority TaskPriority)
 }
 
 const getTasksByProject = `-- name: GetTasksByProject :many
-SELECT t.task_id, t.title, t.description, t.priority, t.author_name, t.created_at, t.deadline
+SELECT t.task_id, t.title, t.description, t.priority, t.user_id, t.created_at, t.deadline
 FROM tasks AS t
          JOIN project_tasks AS pt ON t.task_id = pt.task_id
 WHERE pt.project_id = $1
 `
 
-func (q *Queries) GetTasksByProject(ctx context.Context, projectID int64) ([]Task, error) {
+func (q *Queries) GetTasksByProject(ctx context.Context, projectID string) ([]Task, error) {
 	rows, err := q.db.QueryContext(ctx, getTasksByProject, projectID)
 	if err != nil {
 		return nil, err
@@ -368,7 +378,7 @@ func (q *Queries) GetTasksByProject(ctx context.Context, projectID int64) ([]Tas
 			&i.Title,
 			&i.Description,
 			&i.Priority,
-			&i.AuthorName,
+			&i.UserID,
 			&i.CreatedAt,
 			&i.Deadline,
 		); err != nil {
@@ -386,7 +396,7 @@ func (q *Queries) GetTasksByProject(ctx context.Context, projectID int64) ([]Tas
 }
 
 const getTasksByStatus = `-- name: GetTasksByStatus :many
-SELECT t.task_id, t.title, t.description, t.priority, t.author_name, t.created_at, t.deadline
+SELECT t.task_id, t.title, t.description, t.priority, t.user_id, t.created_at, t.deadline
 FROM tasks AS t
          JOIN task_statuses AS ts ON t.task_id = ts.task_id
          JOIN task_status_types AS tst ON ts.task_status_id = tst.task_status_types_id
@@ -407,7 +417,7 @@ func (q *Queries) GetTasksByStatus(ctx context.Context, type_ string) ([]Task, e
 			&i.Title,
 			&i.Description,
 			&i.Priority,
-			&i.AuthorName,
+			&i.UserID,
 			&i.CreatedAt,
 			&i.Deadline,
 		); err != nil {
@@ -431,7 +441,7 @@ WHERE task_id = $1
 `
 
 type SetTaskDeadlineParams struct {
-	TaskID   int64
+	TaskID   string
 	Deadline sql.NullTime
 }
 
@@ -452,7 +462,7 @@ WHERE ts.task_id = $1
 `
 
 type SetTaskStatusParams struct {
-	TaskID int64
+	TaskID string
 	Type   string
 }
 
@@ -466,18 +476,18 @@ UPDATE tasks
 SET title       = $2,
     description = $3,
     priority    = $4,
-    author_name = $5,
+    user_id = $5,
     created_at  = $6,
     deadline    = $7
 WHERE task_id = $1
 `
 
 type UpdateTaskParams struct {
-	TaskID      int64
+	TaskID      string
 	Title       string
 	Description sql.NullString
 	Priority    TaskPriority
-	AuthorName  string
+	UserID      string
 	CreatedAt   sql.NullTime
 	Deadline    sql.NullTime
 }
@@ -488,7 +498,7 @@ func (q *Queries) UpdateTask(ctx context.Context, arg UpdateTaskParams) error {
 		arg.Title,
 		arg.Description,
 		arg.Priority,
-		arg.AuthorName,
+		arg.UserID,
 		arg.CreatedAt,
 		arg.Deadline,
 	)
