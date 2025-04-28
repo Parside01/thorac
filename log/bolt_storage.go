@@ -156,5 +156,28 @@ func (s *boltStorage) TermByIndex(index int) (int, error) {
 }
 
 func (s *boltStorage) Truncate(index int) error {
-	return nil
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+
+	return s.db.Update(func(tx *bolt.Tx) error {
+		bucket := tx.Bucket(s.bucketName)
+		if bucket == nil {
+			return fmt.Errorf("no such bucket: %s", s.bucketName)
+		}
+
+		cursor := bucket.Cursor()
+
+		minIndex, err := json.Marshal(index)
+		if err != nil {
+			return fmt.Errorf("failed to encode index: %s", err.Error())
+		}
+
+		for key, _ := cursor.Seek(minIndex); key != nil; key, _ = cursor.Next() {
+			err = bucket.Delete(key)
+			if err != nil {
+				return fmt.Errorf("failed to delete key: %s", err.Error())
+			}
+		}
+		return nil
+	})
 }
