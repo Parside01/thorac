@@ -1,9 +1,9 @@
 package storage
 
 type StateStorage interface {
-	GetTerm() (int, error)
-	SetTerm(int) error
-	GetVotedFor() (int, error)
-	SetVotedFor(int) error
+	GetTerm() (uint64, error)
+	SetTerm(uint64) error
+	GetVotedFor() (string, error)
+	SetVotedFor(string) error
 	Close() error
 }

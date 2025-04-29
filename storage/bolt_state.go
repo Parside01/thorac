@@ -46,11 +46,11 @@ func NewBoltStateStorage(dbPath string, bucketName string) (StateStorage, error)
 	}, nil
 }
 
-func (s *boltStateStorage) GetTerm() (int, error) {
+func (s *boltStateStorage) GetTerm() (uint64, error) {
 	s.mutex.RLock()
 	defer s.mutex.RUnlock()
 
-	term := 0
+	var term uint64 = 0
 	err := s.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket(s.bucketName)
 		if bucket == nil {
@@ -71,7 +71,7 @@ func (s *boltStateStorage) GetTerm() (int, error) {
 	return term, err
 }
 
-func (s *boltStateStorage) SetTerm(term int) error {
+func (s *boltStateStorage) SetTerm(term uint64) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 
@@ -93,11 +93,11 @@ func (s *boltStateStorage) SetTerm(term int) error {
 	})
 }
 
-func (s *boltStateStorage) GetVotedFor() (int, error) {
+func (s *boltStateStorage) GetVotedFor() (string, error) {
 	s.mutex.RLock()
 	defer s.mutex.RUnlock()
 
-	votedFor := 0
+	votedFor := ""
 	err := s.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket(s.bucketName)
 		if bucket == nil {
@@ -106,7 +106,7 @@ func (s *boltStateStorage) GetVotedFor() (int, error) {
 
 		votedForBytes := bucket.Get(s.keyVotedFor)
 		if votedForBytes == nil {
-			votedFor = 0
+			votedFor = ""
 			return nil
 		}
 
@@ -118,7 +118,7 @@ func (s *boltStateStorage) GetVotedFor() (int, error) {
 	return votedFor, err
 }
 
-func (s *boltStateStorage) SetVotedFor(term int) error {
+func (s *boltStateStorage) SetVotedFor(votedFor string) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 
@@ -128,7 +128,7 @@ func (s *boltStateStorage) SetVotedFor(term int) error {
 			return fmt.Errorf("no such bucket: %s", s.bucketName)
 		}
 
-		votedForBytes, err := json.Marshal(term)
+		votedForBytes, err := json.Marshal(votedFor)
 		if err != nil {
 			return fmt.Errorf("failed to encode voted for: %s", err.Error())
 		}

@@ -1,30 +1,28 @@
 package storage
 
-import "thorac/core"
-
 type unimplementedLogStorage struct{}
 
-func (*unimplementedLogStorage) Append(entry *core.LogEntry) error {
+func (*unimplementedLogStorage) Append(entry *LogEntry) error {
 	return nil
 }
 
-func (*unimplementedLogStorage) Get(index int) (*core.LogEntry, error) {
+func (*unimplementedLogStorage) Get(index uint64) (*LogEntry, error) {
 	return nil, nil
 }
 
-func (*unimplementedLogStorage) FirstIndex() (int, error) {
+func (*unimplementedLogStorage) FirstIndex() (uint64, error) {
 	return -1, nil
 }
 
-func (*unimplementedLogStorage) LastIndex() (int, error) {
+func (*unimplementedLogStorage) LastIndex() (uint64, error) {
 	return -1, nil
 }
 
-func (*unimplementedLogStorage) TermByIndex(index int) (int, error) {
+func (*unimplementedLogStorage) TermByIndex(index uint64) (uint64, error) {
 	return -1, nil
 }
 
-func (*unimplementedLogStorage) Truncate(index int) error {
+func (*unimplementedLogStorage) Truncate(index uint64) error {
 	return nil
 }
 
@@ -35,18 +33,18 @@ func (*unimplementedLogStorage) Close() error {
 type unimplementedStateStorage struct {
 }
 
-func (*unimplementedStateStorage) GetTerm() (int, error) {
+func (*unimplementedStateStorage) GetTerm() (uint64, error) {
 	return -1, nil
 }
-func (*unimplementedStateStorage) SetTerm(int) error {
+func (*unimplementedStateStorage) SetTerm(uint64) error {
 	return nil
 }
 
-func (*unimplementedStateStorage) GetVotedFor() (int, error) {
-	return -1, nil
+func (*unimplementedStateStorage) GetVotedFor() (string, error) {
+	return "", nil
 }
 
-func (*unimplementedStateStorage) SetVotedFor(int) error {
+func (*unimplementedStateStorage) SetVotedFor(string) error {
 	return nil
 }
 
