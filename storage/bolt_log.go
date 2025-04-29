@@ -1,4 +1,4 @@
-package log
+package storage
 
 import (
 	"encoding/json"
@@ -6,18 +6,19 @@ import (
 	"github.com/boltdb/bolt"
 	"strconv"
 	"sync"
+	"thorac/core"
 )
 
 // TODO: Тут надо подумать на самом деле, щас как будто мы просто будем добавлять в журнал, а потом удалять, но можно как-нибудь красиво использовать каналы и соответственно просто rollback записей.
 
-type boltStorage struct {
-	unimplementedStorage
+type boltLogStorage struct {
+	unimplementedLogStorage
 	db         *bolt.DB
 	mutex      sync.RWMutex
 	bucketName []byte
 }
 
-func NewBoltStorage(dbPath string, bucketName string) (Storage, error) {
+func NewBoltLogStorage(dbPath string, bucketName string) (core.LogStorage, error) {
 	db, err := bolt.Open(dbPath, 0600, nil)
 	if err != nil {
 		return nil, err
@@ -33,17 +34,17 @@ func NewBoltStorage(dbPath string, bucketName string) (Storage, error) {
 	})
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize bolt storage: %s", err.Error())
+		return nil, fmt.Errorf("failed to initialize bolt LogStorage: %s", err.Error())
 	}
 
-	return &boltStorage{
+	return &boltLogStorage{
 		db:         db,
 		mutex:      sync.RWMutex{},
 		bucketName: []byte(bucketName),
 	}, nil
 }
 
-func (s *boltStorage) Append(entry *Entry) error {
+func (s *boltLogStorage) Append(entry *core.LogEntry) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return s.db.Update(func(tx *bolt.Tx) error {
@@ -74,11 +75,11 @@ func (s *boltStorage) Append(entry *Entry) error {
 	})
 }
 
-func (s *boltStorage) Get(index int) (*Entry, error) {
+func (s *boltLogStorage) Get(index int) (*core.LogEntry, error) {
 	s.mutex.RLock()
 	defer s.mutex.RUnlock()
 
-	var entry *Entry
+	var LogEntry *core.LogEntry
 	err := s.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket(s.bucketName)
 		if bucket == nil {
@@ -91,15 +92,15 @@ func (s *boltStorage) Get(index int) (*Entry, error) {
 		}
 
 		valueBytes := bucket.Get(key)
-		if err = json.Unmarshal(valueBytes, &entry); err != nil {
-			return fmt.Errorf("failed to decode entry: %s", err.Error())
+		if err = json.Unmarshal(valueBytes, &LogEntry); err != nil {
+			return fmt.Errorf("failed to decode LogEntry: %s", err.Error())
 		}
 		return nil
 	})
-	return entry, err
+	return LogEntry, err
 }
 
-func (s *boltStorage) FirstIndex() (int, error) {
+func (s *boltLogStorage) FirstIndex() (int, error) {
 	s.mutex.RLock()
 	defer s.mutex.RUnlock()
 
@@ -123,7 +124,7 @@ func (s *boltStorage) FirstIndex() (int, error) {
 	return firstIndex, err
 }
 
-func (s *boltStorage) LastIndex() (int, error) {
+func (s *boltLogStorage) LastIndex() (int, error) {
 	s.mutex.RLock()
 	defer s.mutex.RUnlock()
 
@@ -147,15 +148,15 @@ func (s *boltStorage) LastIndex() (int, error) {
 	return firstIndex, err
 }
 
-func (s *boltStorage) TermByIndex(index int) (int, error) {
-	entry, err := s.Get(index)
+func (s *boltLogStorage) TermByIndex(index int) (int, error) {
+	LogEntry, err := s.Get(index)
 	if err != nil {
 		return 0, err
 	}
-	return entry.Term, nil
+	return LogEntry.Term, nil
 }
 
-func (s *boltStorage) Truncate(index int) error {
+func (s *boltLogStorage) Truncate(index int) error {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 
@@ -180,4 +181,10 @@ func (s *boltStorage) Truncate(index int) error {
 		}
 		return nil
 	})
+}
+
+func (s *boltLogStorage) Close() error {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+	return s.db.Close()
 }
