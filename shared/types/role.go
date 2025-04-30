@@ -7,3 +7,13 @@ const (
 	Candidate
 	Leader
 )
+
+var roleNames = map[Role]string{
+	Follower:  "Follower",
+	Candidate: "Candidate",
+	Leader:    "Leader",
+}
+
+func (r Role) ToString() string {
+	return roleNames[r]
+}

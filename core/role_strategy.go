@@ -5,7 +5,7 @@ import (
 	"thorac/shared/types"
 )
 
-type NodeRoleStrategy interface {
+type RoleStrategy interface {
 	Run(ctx context.Context)
 	Type() types.Role
 	Enter(node *RaftNode)
@@ -23,11 +23,12 @@ const (
 )
 
 type NodeEvent struct {
-	Type NodeEventType
-	Data interface{}
+	Type         NodeEventType
+	ResponseChan chan interface{}
+	Data         interface{}
 }
 
-func NewNodeRoleStrategy(role types.Role) NodeRoleStrategy {
+func NewNodeRoleStrategy(role types.Role) RoleStrategy {
 	switch role {
 	case types.Candidate:
 	case types.Follower:
