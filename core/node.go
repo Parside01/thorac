@@ -213,6 +213,55 @@ func (node *RaftNode) StartElectionTimer() {
 	}
 }
 
+// TODO: Это стратегия лидера.
+func (node *RaftNode) StartLeader() {
+	node.role = types.Leader
+	node.wg.Add(1)
+
+	go func() {
+		ticker := time.NewTimer(10 * time.Millisecond)
+		defer ticker.Stop()
+
+		for {
+			node.mutex.RLock()
+			startTerm := node.currentTerm
+			node.mutex.RUnlock()
+
+			wg := sync.WaitGroup{}
+			for _, peerID := range node.peers {
+				req := &raftpb.AppendEntriesRequest{
+					Term:     startTerm,
+					LeaderId: node.ID,
+				}
+				wg.Add(1)
+				go func(peerID string, req *raftpb.AppendEntriesRequest) {
+					defer wg.Done()
+
+					resp, err := node.transport.SendAppendEntries(node.context, peerID, req)
+					if err != nil {
+						L.Warn("Failed to send request append entries", zap.String("Node ID", node.ID), zap.String("Peer", peerID), zap.Error(err))
+						return
+					}
+					if resp.Term > startTerm {
+						node.TransitionToRole(types.Follower)
+						return
+					}
+				}(peerID, req)
+			}
+			wg.Wait()
+
+			<-ticker.C
+
+			node.mutex.RLock()
+			if node.strategy.Type() != types.Leader {
+				node.mutex.RUnlock()
+				return
+			}
+			node.mutex.RUnlock()
+		}
+	}()
+}
+
 // TODO: Это по идее стратегия кандидата.
 func (node *RaftNode) StartElection() {
 	node.role = types.Candidate
