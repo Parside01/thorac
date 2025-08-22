@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  node1:
+    build: .
+    container_name: raft_node1
+    environment:
+      THORAC_ID: node1
+      THORAC_ADDRESS: 0.0.0.0:8001
+      THORAC_ADVERTISE: node1:8001
+      THORAC_BASE_DATA_DIR: /data
+      THORAC_IS_LEADER: "true"
+      THORAC_LEADER_ADDR: "0.0.0.0:8001"
+      THORAC_SERVER_ADDR: :8083
+      THORAC_PEERS: >
+        [
+          {"id":"node1","addr":"node1:8001"},
+          {"id":"node2","addr":"node2:8002"},
+          {"id":"node3","addr":"node3:8003"}
+        ]
+    volumes:
+      - ./data/node1:/data
+    ports:
+      - "8001:8001"
+      - "8083:8083"
+
+  node2:
+    build: .
+    container_name: raft_node2
+    environment:
+      THORAC_ID: node2
+      THORAC_ADDRESS: 0.0.0.0:8002
+      THORAC_ADVERTISE: node2:8002
+      THORAC_BASE_DATA_DIR: /data
+      THORAC_IS_LEADER: "false"
+      THORAC_LEADER_ADDR: node1:8001
+      THORAC_SERVER_ADDR: :8081
+      THORAC_PEERS: >
+        [
+          {"id":"node1","addr":"node1:8001"},
+          {"id":"node2","addr":"node2:8002"},
+          {"id":"node3","addr":"node3:8003"}
+        ]
+    volumes:
+      - ./data/node2:/data
+    ports:
+      - "8002:8002"
+      - "8081:8081"
+    depends_on:
+      - node1
+    links:
+      - node1
+
+  node3:
+    build: .
+    container_name: raft_node3
+    environment:
+      THORAC_ID: node3
+      THORAC_ADDRESS: 0.0.0.0:8003
+      THORAC_ADVERTISE: node3:8003
+      THORAC_BASE_DATA_DIR: /data
+      THORAC_IS_LEADER: "false"
+      THORAC_LEADER_ADDR: node1:8001
+      THORAC_SERVER_ADDR: :8084
+      THORAC_PEERS: >
+        [
+          {"id":"node1","addr":"node1:8001"},
+          {"id":"node2","addr":"node2:8002"},
+          {"id":"node3","addr":"node3:8003"}
+        ]
+    volumes:
+      - ./data/node3:/data
+    ports:
+      - "8003:8003"
+      - "8084:8084"
+    depends_on:
+      - node1
+    links:
+      - node1
